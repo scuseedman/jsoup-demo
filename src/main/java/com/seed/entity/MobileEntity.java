@@ -51,12 +51,11 @@
 */ 
 package com.seed.entity;
 
-import java.util.List;
 
 /** 
  * ClassName:MobileEntity
  * Date:     2018年1月31日 下午5:02:46 
- * DESC:	
+ * DESC:	txt格式：前缀-号段-省份-城市-运营商-邮编-区号-行政区划编码-类型
  * @author   lwd 
  * @version   
  * @since    JDK 1.7
