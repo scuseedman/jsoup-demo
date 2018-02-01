@@ -1,16 +1,12 @@
 package com.seed;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.seedman.utils.IOUtil;
 
 
 public class GetAllMobileRanges {
-	public static void main(String[] args) throws Exception {
-	}
 	public static List<String> getAllRanges(){
 		String mobiles_range = "134 135 136 137 138 139 147 150 151 152 157 158 159 172 178 182 183 184 187 188 198 130 131 132 145 155 156 166 171 175 176 185 186 133 149 153 173 177 180 181 189 199 170";
 		List<String> mobiles = Arrays.asList(mobiles_range.split(" "));

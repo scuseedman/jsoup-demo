@@ -59,7 +59,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.seed.shedule.LessorCrawl</mainClass>
+							<mainClass>com.seed.GetFailMobileRange</mainClass>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
 						</manifest>

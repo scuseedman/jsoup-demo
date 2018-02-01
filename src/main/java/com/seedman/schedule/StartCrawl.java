@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -88,6 +87,7 @@ public class StartCrawl {
 	 * @return
 	 * 随机获取手机号段
 	 */
+	@SuppressWarnings("unused")
 	private static Set<String> getMobileSegFromRaf() {
 		String mobileSeg = "134|135|136|137|138|139|147";
 //		String mobileSeg = "134|135|136|137|138|139|147|150|151|152|157|158|159|182|183|184|187|188|178|170|130|131|132|133|145|155|156|185|186|175|171|176|170|153|177|180|181|189|170";

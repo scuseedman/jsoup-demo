@@ -52,16 +52,13 @@
 package com.seed.mobileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.seed.entity.MobileEntity;
@@ -79,14 +76,13 @@ import com.seed.utils.IOUtil;
 public class CrawlMobileUtil {
 	private static Logger logger = Logger.getLogger(CrawlMobileUtil.class);
 	static File succFile = null;
-	static File failFile = null;
+	static File successMobilesFile = null;
 	static Pattern pattern = Pattern.compile(" ");
 	static{
-		succFile = new File("");
-		failFile = new File("");
+		succFile = new File("./another_crawler_success");
+		successMobilesFile = new File("./all_success");
 	}
 	public void start(String base_url, String[] mobiles) {
-		// TODO Auto-generated method stub
 		for(String mobileRange :mobiles){
 			List<String> mos = new ArrayList<String>();
 			for(int i = 0; i < 10000; i ++){
@@ -106,10 +102,6 @@ public class CrawlMobileUtil {
 				}
 				
 			}
-			System.out.println("length of mos ===>>> " + mos.size());
-//			for(String mobile:mos){
-//				System.out.println(mobile);
-//			}
 			crawlerMobiles(mos,base_url);//开始爬取
 			break;
 		}
@@ -121,49 +113,54 @@ public class CrawlMobileUtil {
 	 * @param base_url 
 	 * @throws Exception 
 	 */
-	private void crawlerMobiles(List<String> mos, String base_url) {
-		// TODO Auto-generated method stub
+	public void crawlerMobiles(List<String> mos, String base_url) {
 		Document doc;
-		List<String> success = new ArrayList<String>();
-		List<String> faileds = new ArrayList<String>();
+		List<MobileEntity> success = new ArrayList<MobileEntity>();
+		List<String> succ_mobiles = new ArrayList<String>();
 		MobileEntity entity = null;
+		String isp = null;
 		for(String mobile:mos){
-			mobile = "1568410";
 			entity = new MobileEntity(mobile);
 			try {
-				System.out.println("======================>>>>>>> " + mobile);
 				doc = Jsoup.connect(base_url + mobile).get();
 				Elements eles = doc.getElementsByClass("tdc");
-				System.out.println(eles.size());
-				for(int i = 4; i< 8; i ++){//4-8 为我所需
-					System.out.println(eles.get(i).select("td").get(1).text());
-					System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+				logger.info("mobile ===>>> " + mobile + " >>> the size of elements ===>>> " + eles.size());
+				if(eles.size() != 8 ){
+					logger.warn(mobile + "===>>> error !!! will continue !!!");
+					continue;
 				}
-				entity.setProvice(pattern.split(eles.get(4).select("td").get(1).text())[0]);
-				entity.setCity(pattern.split(eles.get(4).select("td").get(1).text())[1]);
-				break;
-			} catch (IOException e) {
+				entity.setProvice(eles.get(4).select("td").get(1).text().substring(0,2));//前两位默认省
+				entity.setCity(eles.get(4).select("td").get(1).text().substring(3));//3位后为市
+				
+				entity.setTypes(eles.get(5).select("td").get(1).text());
+				entity.setCityCode(eles.get(6).select("td").get(1).text());
+				entity.setPostCode(eles.get(7).select("td").get(1).text().replaceAll("[^0-9]", ""));
+				isp = entity.getTypes().contains("移动")?"移动":entity.getTypes().contains("联通")?"联通":"电信";
+				entity.setIsp(isp);
+				success.add(entity);
+				succ_mobiles.add(entity.getMobile());//成功的号段
+				Thread.sleep(300);
+				if(success.size() % 100 == 0 ){
+					IOUtil.saveCollection(success, succFile);
+					IOUtil.saveCollection(succ_mobiles, successMobilesFile);
+					success = new ArrayList<MobileEntity>();
+					succ_mobiles = new ArrayList<String>();
+					Thread.sleep(3000);
+				}
+			}  catch (Exception e) {
 				logger.warn(mobile + ">>> failed");
-				faileds.add(mobile);
-				if(faileds.size() % 100 == 0){
-					try {
-						IOUtil.saveCollection(faileds,failFile );
-						faileds = new ArrayList<String>();
-					} catch (Exception ex) {
-						logger.warn("save collections failed >>>" + faileds);
-					}
-				}
-			}finally{
-				if(faileds.size() != 0){
-					try {
-						IOUtil.saveCollection(faileds,failFile );
-					} catch (Exception e) {
-						logger.warn("save collections failed >>>" + faileds);
-					}
-				}
 			}
 			
 		}
+		try {
+			IOUtil.saveCollection(success, succFile);
+			IOUtil.saveCollection(succ_mobiles, successMobilesFile);
+			success = new ArrayList<MobileEntity>();
+			succ_mobiles = new ArrayList<String>();
+		} catch (Exception ex) {
+			logger.warn("save collections failed >>>" + succ_mobiles);
+		}
+		
 	}
 
 }
