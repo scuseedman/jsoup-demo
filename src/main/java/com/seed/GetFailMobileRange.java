@@ -13,7 +13,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.seed.mobileUtils.CrawlMobileUtil;
-
+import com.seed.utils.GetAllMobileRanges;
+/**
+ * 爬取程序主入口
+ * @author lwd
+ * @date: 2018年2月1日 下午2:52:41
+ */
 public class GetFailMobileRange {
 	public static void main(String[] args) throws Exception {
 		System.out.println(System.currentTimeMillis());

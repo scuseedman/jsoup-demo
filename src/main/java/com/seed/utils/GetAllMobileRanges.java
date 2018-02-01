@@ -1,4 +1,4 @@
-package com.seed;
+package com.seed.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
