@@ -53,7 +53,9 @@ package com.seed.mobileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
@@ -84,7 +86,7 @@ public class CrawlMobileUtil {
 	}
 	public void start(String base_url, String[] mobiles) {
 		for(String mobileRange :mobiles){
-			List<String> mos = new ArrayList<String>();
+			Set<String> mos = new HashSet<String>();
 			for(int i = 0; i < 10000; i ++){
 				String mobile = "";
 				if(i < 10){
@@ -113,7 +115,7 @@ public class CrawlMobileUtil {
 	 * @param base_url 
 	 * @throws Exception 
 	 */
-	public void crawlerMobiles(List<String> mos, String base_url) {
+	public void crawlerMobiles(Set<String> mos, String base_url) {
 		Document doc;
 		List<MobileEntity> success = new ArrayList<MobileEntity>();
 		List<String> succ_mobiles = new ArrayList<String>();

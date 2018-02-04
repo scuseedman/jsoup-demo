@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import com.seed.mobileUtils.CrawlMobileUtil;
 import com.seed.utils.GetAllMobileRanges;
 /**
@@ -20,22 +22,23 @@ import com.seed.utils.GetAllMobileRanges;
  * @date: 2018年2月1日 下午2:52:41
  */
 public class GetFailMobileRange {
+	private static Logger logger = Logger.getLogger(GetAllMobileRanges.class);
 	public static void main(String[] args) throws Exception {
 		System.out.println(System.currentTimeMillis());
 		List<String> success = getSuccessList();
 		List<String> all_mobiles = GetAllMobileRanges.getAllRanges();
 		
-		List<String> all_failure = getDiffMobileRanges(success,all_mobiles);
-		System.out.println("length of success ===>>> " + success.size());
-		System.out.println("length of all_mobiles ===>>> " + all_mobiles.size());
-		System.out.println("length of all_failure ===>>> " + all_failure.size());
+		Set<String> all_failure = getDiffMobileRanges(success,all_mobiles);
+		logger.info("length of success ===>>> " + success.size());
+		logger.info("length of all_mobiles ===>>> " + all_mobiles.size());
+		logger.info("length of all_failure ===>>> " + all_failure.size());
 		String base_url = "http://www.ip138.com:8080/search.asp?action=mobile&mobile=";
 		
 		new CrawlMobileUtil().crawlerMobiles(all_failure,base_url);
 	}
-	private static List<String> getDiffMobileRanges(List<String> success,
+	private static Set<String> getDiffMobileRanges(List<String> success,
 			List<String> all_mobiles) throws Exception {
-		List<String> fail = new ArrayList<String>();
+		Set<String> fail = new HashSet<String>();
 		Map<String,Integer> succ_map = new HashMap<String,Integer>();
 		Set<String> succ_set = new HashSet<String>();
 		
