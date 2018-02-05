@@ -159,7 +159,7 @@ public class MobileEntity {
 		super();
 	}
 	public MobileEntity(String mobile) {
-		this.pref = mobile.substring(0, 4);
+		this.pref = mobile.substring(0, 3);
 		this.mobile = mobile;
 	}
 	
